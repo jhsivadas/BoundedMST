@@ -73,7 +73,7 @@ class BoundedMST:
         connections = [0 for i in range(self.N)]
         while len(solution) < self.N - 1:
             neighbor = neighbors[curr_node]  # list of neighbors and edge_num ot that neighbor
-            curr_node_bound = self.degrees[curr_node] # integer bound 
+            curr_node_bound = self.degrees[curr_node] # integer bound (Gabe thinks error is here)
 
         
            # Add all neighbors to heap
@@ -92,6 +92,7 @@ class BoundedMST:
                 _, v_num, edge_num = heapq.heappop(neighbor_heap)
                 ratios[v_num][0] -= 1
                 ratios[v_num][1] -= 1
+                degrees[vnum] -= 1 # Gabe's fix
                 if connections[v_num] < bounds:
                     connections[v_num] += 1
                     visited.add(v_num)
