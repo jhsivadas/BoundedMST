@@ -46,18 +46,21 @@ class BoundedMST:
 
         neighbors = self.get_all_neighbhors()
 
-        ratios = {u: [0, 0, 0] for u in range(self.N)} # declare list of edges_num, bounds, ratio, connected_edges
+        ratios = {u: [0, 0, 0, 0] for u in range(self.N)} # declare list of edges_num, bounds, ratio, connected_edges
 
         # Keep track of number of edges for each vertex
         for v1, v2, weight in self.edges:
             ratios[v1][0] += 1
             ratios[v2][0] += 1
+            ratios[v2][3] = weight
+            ratios[v1][3] = weight
 
+ 
         # Get bounds and calculate bounds / edges ratio for each vertex
         for vertex in range(self.N):
             bounds = self.degrees[vertex]
             ratios[vertex][1] = bounds
-            ratios[vertex][2] = ratios[vertex][1] / ratios[vertex][0]
+            ratios[vertex][2] = (ratios[vertex][1] / ratios[vertex][0]) / ratios[vertex][3]
 
         # Get vertex with the maximum ratio
         maximum_ratio = max(ratios.items(), key=lambda x: x[1][2])
@@ -81,7 +84,8 @@ class BoundedMST:
             for n, edge_num in neighbor:
                 if n not in visited:
                     ratio = ratios[n][2] # gets ratio for that vertex
-                    heapq.heappush(neighbor_heap, (-ratio, n, edge_num))  # keep track of max 
+                    edges = ratios[n][0]
+                    heapq.heappush(neighbor_heap, (-ratio, edges, n, edge_num))  # keep track of max 
                 
             # print(neighbor_heap)   
 
@@ -89,8 +93,24 @@ class BoundedMST:
             
             for i in range((min(curr_node_bound, len(neighbor_heap)))):
 
-                # Take heap with largest ratio in heap
-                _, v_num, edge_num = heapq.heappop(neighbor_heap)
+                # Take heap with largest ratio in heap 
+                ratio, edges, v_num, edge_num = heapq.heappop(neighbor_heap)
+
+                # min_values = []
+
+                # while len(neighbor_heap) > 0: 
+                #     next = neighbor_heap[0]
+                #     next_ratio 
+                #     if ratio == next_ratio:
+                #         print("hi")
+                #         break
+                #     else:
+                #         break 
+                        
+
+                
+                
+
                 ratios[v_num][0] -= 1
                 ratios[v_num][1] -= 1
                 self.degrees[v_num] -= 1 # Gabe's fix
@@ -102,27 +122,31 @@ class BoundedMST:
                     if ratios[v_num][0] == 0:
                         ratios[v_num][2] = 0
                     else:
-                        ratios[v_num][2] = ratios[v_num][1] / ratios[v_num][0]
+                        ratios[v_num][2] = (ratios[v_num][1] / ratios[v_num][0]) /ratios[v_num][3]
                     
                     heapq.heappush(can_enter, (-ratios[v_num][2], v_num, edge_num))
         
 
             if can_enter == []:
-                missing = []
-                for i in range(self.N):
-                    if i not in visited:
-                        missing.append(i)
+                print("nope")
+                break
+            # if can_enter == []:
+            #     print("hi")
+            #     missing = []
+            #     for i in range(self.N):
+            #         if i not in visited:
+            #             missing.append(i)
 
-                ## Change this so that it selects the node missing that has hte highest rati0
-                missing_max = -1
-                missing_max_node = -1
-                for node in missing:
-                    if missing_max < ratios[node][2]:
-                        missing_max_node = node
-                        missing_max = ratios[node][2]
+            #     ## Change this so that it selects the node missing that has hte highest rati0
+            #     missing_max = -1
+            #     missing_max_node = -1
+            #     for node in missing:
+            #         if missing_max < ratios[node][2]:
+            #             missing_max_node = node
+            #             missing_max = ratios[node][2]
                     
-                curr_node = missing_max_node
-                continue
+            #     curr_node = missing_max_node
+            #     continue
             
             
             ratio, v_num, edge_num = heapq.heappop(can_enter)
