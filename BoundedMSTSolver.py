@@ -85,7 +85,8 @@ class BoundedMST:
                 if n not in visited:
                     ratio = ratios[n][2] # gets ratio for that vertex
                     edges = ratios[n][0]
-                    heapq.heappush(neighbor_heap, (-ratio, edges, n, edge_num))  # keep track of max 
+                    degs = ratios[n][1]
+                    heapq.heappush(neighbor_heap, (-ratio, degs, edges, n, edge_num))  # keep track of max 
                 
             # print(neighbor_heap)   
 
@@ -124,7 +125,7 @@ class BoundedMST:
                     else:
                         ratios[v_num][2] = (ratios[v_num][1] / ratios[v_num][0]) /ratios[v_num][3]
                     
-                    heapq.heappush(can_enter, (-ratios[v_num][2], ratios[v_num][0] ,v_num, edge_num)) #push heap tiebreaker
+                    heapq.heappush(can_enter, (-ratios[v_num][2], ratios[degs][0], ratios[v_num][0] ,v_num, edge_num)) # push heap tiebreaker
         
 
             if can_enter == []:
@@ -149,7 +150,7 @@ class BoundedMST:
             #     continue
             
             
-            ratio, edge_count, v_num, edge_num = heapq.heappop(can_enter)
+            ratio, degs, edge_count, v_num, edge_num = heapq.heappop(can_enter) # grab the next vertex with the smallest ratio, then number of edges
             # print(edge_num)
             curr_node = v_num
             
