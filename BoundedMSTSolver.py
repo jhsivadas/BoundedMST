@@ -124,7 +124,7 @@ class BoundedMST:
                     else:
                         ratios[v_num][2] = (ratios[v_num][1] / ratios[v_num][0]) /ratios[v_num][3]
                     
-                    heapq.heappush(can_enter, (-ratios[v_num][2], v_num, edge_num))
+                    heapq.heappush(can_enter, (-ratios[v_num][2], ratios[v_num][0] ,v_num, edge_num)) #push heap tiebreaker
         
 
             if can_enter == []:
