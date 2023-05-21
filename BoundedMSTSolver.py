@@ -86,13 +86,14 @@ class BoundedMST:
             # print(neighbor_heap)   
 
             # Add connected edges / select which edges to take 
+            
             for i in range((min(curr_node_bound, len(neighbor_heap)))):
 
                 # Take heap with largest ratio in heap
                 _, v_num, edge_num = heapq.heappop(neighbor_heap)
                 ratios[v_num][0] -= 1
                 ratios[v_num][1] -= 1
-                degrees[vnum] -= 1 # Gabe's fix
+                self.degrees[v_num] -= 1 # Gabe's fix
                 if connections[v_num] < bounds:
                     connections[v_num] += 1
                     visited.add(v_num)
@@ -102,20 +103,33 @@ class BoundedMST:
                         ratios[v_num][2] = 0
                     else:
                         ratios[v_num][2] = ratios[v_num][1] / ratios[v_num][0]
+                    
                     heapq.heappush(can_enter, (-ratios[v_num][2], v_num, edge_num))
-                
-                # Update surruonding 
-            # print(can_enter)
-            # Take next node 
+        
+
+            if can_enter == []:
+                missing = []
+                for i in range(self.N):
+                    if i not in visited:
+                        missing.append(i)
+
+                ## Change this so that it selects the node missing that has hte highest ratio         
+                break
+            
+            
             ratio, v_num, edge_num = heapq.heappop(can_enter)
             # print(edge_num)
             curr_node = v_num
             
             solution.append(edge_num)
-         
+    
             # print(visited)
             # print(count)
         # print(len(solution))
+
+       
+
+
 
 
         return [i + 1 for i in solution]
