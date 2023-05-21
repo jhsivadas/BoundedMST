@@ -113,8 +113,16 @@ class BoundedMST:
                     if i not in visited:
                         missing.append(i)
 
-                ## Change this so that it selects the node missing that has hte highest ratio         
-                break
+                ## Change this so that it selects the node missing that has hte highest rati0
+                missing_max = -1
+                missing_max_node = -1
+                for node in missing:
+                    if missing_max < ratios[node][2]:
+                        missing_max_node = node
+                        missing_max = ratios[node][2]
+                    
+                curr_node = missing_max_node
+                continue
             
             
             ratio, v_num, edge_num = heapq.heappop(can_enter)
