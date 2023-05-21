@@ -149,7 +149,7 @@ class BoundedMST:
             #     continue
             
             
-            ratio, v_num, edge_num = heapq.heappop(can_enter)
+            ratio, edge_count, v_num, edge_num = heapq.heappop(can_enter)
             # print(edge_num)
             curr_node = v_num
             
